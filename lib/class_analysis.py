@@ -37,8 +37,9 @@ def calculate_pct_match_gene_group_to_classes(rep_df, class_encodings, non_sampl
 	df_list = {
 		'class_name': [], 
 		'group_key':[], 
-		'n_matched':[], 
-		'n_total':[], 
+		'n_matched':[],
+		'n_total_in_class': [],
+		'n_total_in_set':[], 
 		'matched_pct':[],
 		'matched': []
 	}
@@ -51,15 +52,17 @@ def calculate_pct_match_gene_group_to_classes(rep_df, class_encodings, non_sampl
 		for unique_val in rep_df['class'].unique(): 
 			samples_in_class_matching_unique_group = rep_df[ rep_df['class'] == unique_val ]['elements']
 			samples_in_unique_repset = samples_in_class_matching_unique_group.isin(samples_in_class)
+			matching_samples = samples_in_class_matching_unique_group[samples_in_unique_repset]
 			n_samples_in_unique_repset = samples_in_unique_repset.sum()
 			total_samples_in_whole_set =  rep_df[ rep_df['class'] == unique_val ]['elements'].isin(class_encodings['name']).sum()
 
-			matched = '' if n_samples_in_unique_repset == 0 else '|'.join(list(samples_in_class_matching_unique_group.values))
+			matched = '' if n_samples_in_unique_repset == 0 else '|'.join(list(matching_samples.values))
 
 			df_list['class_name'].append(class_name)
 			df_list['group_key'].append(unique_val)
 			df_list['n_matched'].append(n_samples_in_unique_repset)
-			df_list['n_total'].append(total_samples_in_whole_set)
+			df_list['n_total_in_class'].append(samples_in_class)
+			df_list['n_total_in_set'].append(total_samples_in_whole_set)
 			df_list['matched_pct'].append(n_samples_in_unique_repset / total_samples_in_whole_set)
 			df_list['matched'].append(matched)
 
