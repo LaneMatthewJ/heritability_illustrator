@@ -101,6 +101,7 @@ def create_figure(n_rows, n_cols, df, gene_name, title, match, representative, i
 	size = 32 if n_rows == 1 else 64
 	plt.suptitle(title, color='white', size=size)
 	filename = f'{gene_name}_{representative}_{match}_superplot.png'
+
 	plt.savefig(filename)
 
 	plt.ion()

@@ -18,7 +18,7 @@ def generate_profile(file_name: str, gene_name: str, start: int, stop: int, crea
 		gene_name = gene_name, 
 		start = start,
 		stop = stop, 
-		create_styled_table=True)
+		create_styled_table=create_styled_table)
 
 	# Append file name to list
 	if outfile_name is not None: 
@@ -63,7 +63,7 @@ def generate_profile(file_name: str, gene_name: str, start: int, stop: int, crea
 
 	## Analyze Output: 
 	if class_encodings_filename is not None: 
-		class_base = class_encodings_filename.split('.tsv')[0]
+		class_base = class_encodings_filename.split('.')[0].split('/')[-1]
 		analysis_file_out = f"{gene_name}_{gene_name}_{start}_to_{stop}_{class_base}.tsv"
 		
 		analyze_output(class_encodings_filename, analysis_file_out, element_map)
@@ -71,7 +71,7 @@ def generate_profile(file_name: str, gene_name: str, start: int, stop: int, crea
 		outfile_list.append(analysis_file_out)
 
 	gene_dir = f"{gene_name}_{start}_to_{stop}_visualizations"
-
+    
 	os.mkdir(gene_dir)
 
 	for file in outfile_list: 

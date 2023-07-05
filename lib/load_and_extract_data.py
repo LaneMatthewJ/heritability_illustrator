@@ -37,9 +37,10 @@ def get_non_dominant_strains(dataframe, max_by = 'count'):
 
 def load_and_extract_data(filename, gene_name, start, stop, create_styled_table=True):
 	df = read_hapmap(filename)
-	
+
 	framed_df = get_snps_within_frame(df, start, stop)
 	genotype_columns = get_genotype_columns(df)
+
 
 	homozygous_df = replace_heterozygotes_with_dom(framed_df, genotype_columns)
 	haploid_df = squash_dip_to_hap(homozygous_df, genotype_columns)
@@ -54,7 +55,7 @@ def load_and_extract_data(filename, gene_name, start, stop, create_styled_table=
 
 	dist = DistanceMetric.get_metric('hamming')
 	distances = dist.pairwise(matching_cluster_adj[repset_list].T)
-
+    
 	ordered_dist_mat, res_order, res_linkage = compute_serial_matrix(distances,method='ward')
 
 	ordered_repset = np.array(repset_list)[res_order]
@@ -69,7 +70,7 @@ def load_and_extract_data(filename, gene_name, start, stop, create_styled_table=
 	if create_styled_table: 
 		outfile_name =  f'./styled_table_{gene_name}.png'
 		styled_table = transposed.style.background_gradient(cmap='coolwarm')
-		html = styled_table.render()
+		html = styled_table.to_html()
 		imgkit.from_string(html, outfile_name)
 
 	return styled_table, transposed, element_map, outfile_name
@@ -79,7 +80,6 @@ def analyze_output(filename, outfile_name, element_map):
 	class_encodings = extract_names(class_encodings)
 	rep_df = convert_rep_class_map_to_df(element_map)
 	df = calculate_pct_match_gene_group_to_classes(rep_df, class_encodings)
-
-	df.to_csv(f'./{outfile_name}.tsv', sep='\t')
+	df.to_csv(f'./{outfile_name}', sep='\t')
 
 	return df, class_encodings
