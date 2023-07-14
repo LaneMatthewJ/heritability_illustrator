@@ -5,7 +5,7 @@ from lib.load_and_extract_data import load_and_extract_data, analyze_output, get
 from lib.plot_images import plot_representative_set
 
 
-def generate_profile(file_name: str, gene_name: str, start: int, stop: int, create_styled_table=False, class_encodings_filename=None):
+def generate_profile(file_name: str, gene_name: str, start: int, stop: int, create_styled_table=False, class_encodings_filename=None, input_image_directory='../image_data/images_background_removed'):
 	"""
 	This function takes a particular gene of interest, calculates its region from the hapmap files, and then 
 	creates summary groupings and visualizes the output SNP regions. 
@@ -55,7 +55,7 @@ def generate_profile(file_name: str, gene_name: str, start: int, stop: int, crea
 			gene_name,
 			non_dominant_representative,
 			n_figures_per_row = figs_per_row,
-			input_image_directory='../image_data/images_background_removed',
+			input_image_directory = input_image_directory,
 			file_list_path='../image_data/sorted/file_list.xlsx')
 		
 		outfile_list.append(outfile)

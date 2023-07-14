@@ -9,7 +9,7 @@ from PIL import Image
 from PIL import ImageChops
 import pydash
 import seaborn as sns
-
+from lib.utils import extract_file_from_directory_list
 
 def create_representative_set_dataframe(element_map, class_encodings = None): 
 	df = pd.DataFrame({'Representative': element_map.values(), 'Sample': list(element_map.keys())})
@@ -40,9 +40,8 @@ def trim_image(image):
 	return Image.fromarray(vals[y_min:y_max, x_min:x_max, :])
 
 def create_figure(n_rows, n_cols, df, gene_name, title, match, representative, input_image_directory='../image_data/images_background_removed/', verbose=False): 
-	
-	image_files = os.listdir(input_image_directory)
 
+	image_files = os.listdir(input_image_directory)
 	actual_image_list = list(filter( lambda x: x in image_files, df['filename'].values))
 	actual_image_count = len(actual_image_list)
 
@@ -119,6 +118,8 @@ def save_count_plot(df, title, gene_name, match, representative):
 	
 def print_images_from_set(representative, representative_set, class_encodings, gene_name, class_match, n_figures_per_row=5, input_image_directory='', verbose=False):
 	dataframe = create_representative_set_dataframe(representative_set, class_encodings)
+	print("input_image_directory", input_image_directory)
+
 	df_slice = dataframe[dataframe['Representative'] == representative]
 
 	if len(df_slice) == 0: 
@@ -162,11 +163,17 @@ def print_images_from_set(representative, representative_set, class_encodings, g
 			input_image_directory=input_image_directory,
 			verbose=verbose
 		)
-		
+
 def plot_representative_set(representative_set, gene_name, representative, n_figures_per_row=5, input_image_directory='../image_data', file_list_path = None, verbose=False): 
 	dataframe = create_representative_set_dataframe(representative_set)
-	file_list_df = pd.read_excel(file_list_path, header=None)
+	print(dataframe)
+	image_files = os.listdir(input_image_directory)
+	file_list_df = pd.DataFrame()
+	file_list_df[0] = dataframe['Sample'].apply(lambda x: extract_file_from_directory_list(x, image_files))
+	file_list_df.dropna(inplace=True)
+
 	named = extract_names(file_list_df, 0)
+
 	
 	dataframe['filename'] = dataframe['Sample'].apply(lambda x: np.nan if len(named[ named['name'] == x]) == 0 else named[ named['name'] == x].values[0][0])
 
@@ -184,7 +191,8 @@ def plot_representative_set(representative_set, gene_name, representative, n_fig
 	# 	"grouped_set",
 	# 	representative
 	# )
-
+	print("Creating Figure")
+	print(df_slice)
 	outfile_name = create_figure(
 		n_rows,
 		n_columns,
