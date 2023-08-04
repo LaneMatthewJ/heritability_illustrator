@@ -6,6 +6,7 @@ def extract_names(
 	name_split_fn = lambda x: x.split('_')[3].split('.')[0].upper()): 
 	
 	names_series  = class_encodings[column_name]
+	
 	updated_names = names_series.apply(name_split_fn)
 	class_encodings['name'] = updated_names
 

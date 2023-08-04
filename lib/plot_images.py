@@ -164,18 +164,28 @@ def print_images_from_set(representative, representative_set, class_encodings, g
 			verbose=verbose
 		)
 
+
+
+
+def match_names_to_images(x, named): 
+	matched = named[named['name'] == x]
+	files = list(matched[0].values)
+	return files
+
+
 def plot_representative_set(representative_set, gene_name, representative, n_figures_per_row=5, input_image_directory='../image_data', file_list_path = None, verbose=False): 
 	dataframe = create_representative_set_dataframe(representative_set)
-	print(dataframe)
+
 	image_files = os.listdir(input_image_directory)
 	file_list_df = pd.DataFrame()
 	file_list_df[0] = dataframe['Sample'].apply(lambda x: extract_file_from_directory_list(x, image_files))
 	file_list_df.dropna(inplace=True)
 
-	named = extract_names(file_list_df, 0)
+	named = extract_names(file_list_df.explode(0), 0)
 
-	
-	dataframe['filename'] = dataframe['Sample'].apply(lambda x: np.nan if len(named[ named['name'] == x]) == 0 else named[ named['name'] == x].values[0][0])
+	dataframe['filename'] = dataframe['Sample'].apply(lambda x: match_names_to_images(x, named))
+
+	dataframe = dataframe.explode('filename')
 
 	df_slice = dataframe[dataframe['Representative'] == representative]
 	df_slice = df_slice[ df_slice['filename'].notna() ]
@@ -191,8 +201,6 @@ def plot_representative_set(representative_set, gene_name, representative, n_fig
 	# 	"grouped_set",
 	# 	representative
 	# )
-	print("Creating Figure")
-	print(df_slice)
 	outfile_name = create_figure(
 		n_rows,
 		n_columns,
