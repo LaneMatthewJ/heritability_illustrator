@@ -73,7 +73,11 @@ def generate_profile(file_name: str, gene_name: str, start: int, stop: int, crea
 
     gene_dir = f"{gene_name}_{start}_to_{stop}_visualizations"
     
-    os.mkdir(gene_dir)
+    os.makedirs(gene_dir,  exist_ok=True)
 
     for file in outfile_list: 
+        print(file)
         shutil.move(file, f"{gene_dir}/{file}")
+    return list(map( lambda x: f"{gene_dir}/{x}", outfile_list))
+
+
