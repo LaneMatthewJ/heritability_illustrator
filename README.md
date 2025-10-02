@@ -38,7 +38,8 @@ The code was developed for *Bacillus subtilis* genome‐wide association analyse
 ├── notebooks
 │   └── example_notebook.ipynb        # Walkthrough notebook
 ├── README.md
-└── requirements.txt```
+└── requirements.txt
+```
 
 
 ---
