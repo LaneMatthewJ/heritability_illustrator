@@ -4,10 +4,10 @@
 
 A small toolkit for:
 
-* **Extracting** SNPs for arbitrary gene regions from large HapMap/VCF files  
-* **Collapsing** diploid calls to haploid representations and dominant genotypes  
-* **Grouping** strains by identical SNP‐match profiles (network-based clustering)  
-* **Visualising** representative strain sets and match tables as heat-map PNGs  and circos plotting
+- **Extracting** SNPs for arbitrary gene regions from large HapMap/VCF files  
+- **Collapsing** diploid calls to haploid representations and dominant genotypes  
+- **Grouping** strains by identical SNP‐match profiles (network-based clustering)  
+- **Visualising** representative strain sets and match tables as heat-map PNGs  and circos plotting
 
 
 The code was developed for *Bacillus subtilis* genome‐wide association analyses but is file-format-agnostic and should work with any species as long as your HapMap/VCF files follow standard conventions.
@@ -97,3 +97,9 @@ colors = ['cyan', 'black']
 black_to_blue_cmap = LinearSegmentedColormap.from_list('black_to_blue', colors)
 sns.heatmap(data, cmap=black_to_blue_cmap) 
 ```
+
+##  Example Applications
+-	Mapping gene-level SNP differences between experimental strains.
+-	Identifying strain clusters with identical genomic variation patterns.
+-	Performing heritability-informed grouping of phenotypes vs. genotypes.
+-	Generating publication-ready heatmaps and circos plots.
