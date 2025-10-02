@@ -5,13 +5,13 @@ from scipy.spatial.distance import pdist, squareform
 import numpy as np
 import imgkit
 
-from lib.data_loaders import read_hapmap
-from lib.df_helpers import get_snps_within_frame, get_genotype_columns
-from lib.heterozygote_to_homozygote import extract_heterozygous_columns, replace_heterozygotes_with_dom
-from lib.haploid_squashing import squash_dip_to_hap
-from lib.dominant_matching import create_dominant_match_df, calculate_matching_clusters
-from lib.network_helpers import create_representative_set, extract_representatives, compute_serial_matrix
-from lib.class_analysis import extract_names, convert_rep_class_map_to_df, calculate_pct_match_gene_group_to_classes
+from .data_loaders import read_hapmap
+from .df_helpers import get_snps_within_frame, get_genotype_columns
+from .heterozygote_to_homozygote import extract_heterozygous_columns, replace_heterozygotes_with_dom
+from .haploid_squashing import squash_dip_to_hap
+from .dominant_matching import create_dominant_match_df, calculate_matching_clusters
+from .network_helpers import create_representative_set, extract_representatives, compute_serial_matrix
+from .class_analysis import extract_names, convert_rep_class_map_to_df, calculate_pct_match_gene_group_to_classes
 
 
 def get_non_dominant_strains(dataframe, max_by = 'count'):

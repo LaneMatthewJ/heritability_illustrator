@@ -1,8 +1,8 @@
 import os
 import shutil
 import pandas as pd
-from lib.load_and_extract_data import load_and_extract_data, analyze_output, get_non_dominant_strains
-from lib.plot_images import plot_representative_set
+from .load_and_extract_data import load_and_extract_data, analyze_output, get_non_dominant_strains
+from .plot_images import plot_representative_set
 
 
 def generate_profile(file_name: str, gene_name: str, start: int, stop: int, create_styled_table=False, class_encodings_filename=None, input_image_directory='../image_data/images_background_removed', create_image_plots = True):

@@ -1,4 +1,5 @@
-from lib.class_analysis import extract_names
+from .class_analysis import extract_names
+from .utils import extract_file_from_directory_list
 import matplotlib.pyplot as plt 
 from mpl_toolkits.axes_grid1 import ImageGrid
 import matplotlib.gridspec as gridspec
@@ -9,7 +10,6 @@ from PIL import Image
 from PIL import ImageChops
 import pydash
 import seaborn as sns
-from lib.utils import extract_file_from_directory_list
 
 def create_representative_set_dataframe(element_map, class_encodings = None): 
 	df = pd.DataFrame({'Representative': element_map.values(), 'Sample': list(element_map.keys())})
