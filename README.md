@@ -1,9 +1,8 @@
 # Gene-Level SNP Grouping, Insertion Mapping & Heritability Toolkit
 
 ![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue)
-![License: MIT](https://img.shields.io/badge/license-MIT-green)
 
-A small but opinionated toolkit for:
+A small toolkit for:
 
 * **Extracting** SNPs for arbitrary gene regions from large HapMap/VCF files  
 * **Collapsing** diploid calls to haploid representations and dominant genotypes  
@@ -15,36 +14,32 @@ The code was developed for *Bacillus subtilis* genome‐wide association analyse
 
 ---
 
-## Table of Contents
-1. [Repository layout](#repository-layout)  
-2. [Installation](#installation)  
-3. [Quick start](#quick-start)  
-4. [Input file formats](#input-file-formats)  
-5. [Outputs](#outputs)  
-6. [Library API](#library-api)  
-7. [Notebook workflow](#notebook-workflow-heritability_estimationipynb)  
-8. [Troubleshooting](#troubleshooting)  
-9. [Contributing](#contributing)  
-10. [License & citation](#license--citation)
-
 ---
 
 ## Repository layout
 ```
-├── MAIN.py                         # Entry-point helper script
-├── heritability_estimation.ipynb   # End-to-end heritability notebook
-├── lib/                            # Core library (importable)
-│   ├── init.py
-│   ├── load_and_extract_data.py
-│   ├── dominant_matching.py
-│   ├── create_gene_region_profile.py
-│   ├── plot_images.py
-│   └── … (helpers: data_loaders, df_helpers, etc.)
-├── data/                           # Example HapMap / VCF files 
-└── README.md
-```
+.
+├── conftest.py
+├── heritability_illustrator
+│   ├── __init__.py
+│   ├── class_analysis.py             # Class/phenotype group analysis helpers
+│   ├── convert_vcf.py                # Core VCF parsing and normalization
+│   ├── create_gene_region_profile.py # SNP extraction for gene/region intervals
+│   ├── create_visualization.py       # Heatmap + profile visualization pipeline
+│   ├── data_loaders.py               # File I/O utilities for VCF and metadata
+│   ├── df_helpers.py                 # Pandas dataframe cleaning / merging
+│   ├── dominant_matching.py          # Collapse genotypes to dominant matches
+│   ├── haploid_squashing.py          # Convert diploid calls to haploid reps
+│   ├── heterozygote_to_homozygote.py # Handle heterozygous calls simplification
+│   ├── load_and_extract_data.py      # High-level data extraction orchestration
+│   ├── network_helpers.py            # Graph/network SNP clustering functions
+│   ├── plot_images.py                # Matplotlib/seaborn visualization wrappers
+│   └── utils.py                      # Small utility functions
+├── notebooks
+│   └── example_notebook.ipynb        # Walkthrough notebook
+├── README.md
+└── requirements.txt```
 
-> **Tip** The library does **not** depend on the notebook; all heavy-lifting lives in `lib/`.
 
 ---
 
@@ -53,54 +48,52 @@ The code was developed for *Bacillus subtilis* genome‐wide association analyse
 ### 1. Clone and create an environment
 
 ```bash
-git clone https://github.com/<your-org>/gene-snp-toolkit.git
-cd gene-snp-toolkit
+
+git clone https://github.com/LaneMatthewJ/heritability_illustrator.git
+cd heritability_illustrator
 python -m venv .venv        # or conda create -n genekit python=3.11
 source .venv/bin/activate
 ```
+
+or with conda: 
+
+```bash
+conda create -n genekit python=3.11
+conda activate genekit
+```
+
 ### 2. Istall Python Requirements: 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 3. External Dependencies: 
+**Note**: There may be a potential optional dependency: 
 ```bash
 sudo apt-get install wkhtmltopdf
 ```
 
-
-
-
-
-## Quick Start: 
-
-Below is a minimal end-to-end example run directly from Python. Replace file paths and genomic coordinates with your own.
+## Example Usage
 
 ```python
+import heritability_illustrator
+from heritability_illustrator.create_visualization import generate_profile_from_vcf, create_start_stop_df
+
 start_pos = 0
 stop_pos = 4_200_000
-proportion_similarity_for_clustering=0
 
-profile = generate_profile_from_vcf(
-    "./data/Bsubtilis_350strain_SNPs_final.vcf", 
+outfiles_ronn1_ME = generate_profile_from_vcf(
+    "../variant_mapping/Bsubtilis_350strain_SNPs_final.vcf", 
     start_pos = start_pos,
-    stop_pos =  stop_pos
-)
+    stop_pos =  stop_pos,
+    class_encoding_filename = None, # '../image_data/sorted/class_encodings.xlsx'
+    input_image_directory = None) 
 
-create_start_stop_df(
-  profile[0], 
-  start_pos, 
-  stop_pos, 
-  "Bsubtilis_SNPs", 
-  proportion_similarity_for_clustering
-) 
+create_start_stop_df(outfiles_ronn1_ME[0], start_pos, stop_pos, "Bsubtilis_SNPs", 0) 
+
+df = pd.read_csv("Bsubtilis_350strain_SNPs_final_0_to_4200000_visualizations/Bsubtilis_350strain_SNPs_final_0_4200000_snp_matchings_by_group.tsv", sep='\t', index_col=0) 
+data = df[df.columns[:-1]].loc[df.index[1:]]
+colors = ['cyan', 'black']
+
+black_to_blue_cmap = LinearSegmentedColormap.from_list('black_to_blue', colors)
+sns.heatmap(data, cmap=black_to_blue_cmap) 
 ```
-
-All generated artefacts are collected in a folder named
-
-`<gene>_<start>_to_<stop>_visualizations/`
-
-
-
-
-
