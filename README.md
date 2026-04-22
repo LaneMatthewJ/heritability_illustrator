@@ -104,3 +104,8 @@ sns.heatmap(data, cmap=black_to_blue_cmap)
 -	Identifying strain clusters with identical genomic variation patterns.
 -	Performing heritability-informed grouping of phenotypes vs. genotypes.
 -	Generating publication-ready heatmaps and circos plots.
+
+
+# Citation
+If you use this software, please cite: 
+Lane, M., Chhetri, H., & Jacobson, D. (2026). Heritability Illustrator v1.0.0 (1.0.0). Zenodo. https://doi.org/10.5281/zenodo.19687706
